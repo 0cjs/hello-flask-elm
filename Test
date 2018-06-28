@@ -16,8 +16,16 @@ ___
 }
 
 cd "$basedir"
-[[ $1 = -C ]] && { shift; rm -rf .build; }
-. ./activate
+[[ $1 = -C ]] && { shift; git clean -fdX; }
+
+############################################################
+# Python and NPM package install
+
+. ./activate -q
+npm install --silent
+
+############################################################
+# Functional (smoke) test of Flask server
 
 FLASK_ENV=development FLASK_APP=server/app.py flask run & flaskpid=$!
 trap "kill $flaskpid" 0
