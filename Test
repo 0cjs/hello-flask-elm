@@ -3,6 +3,26 @@ set -e
 
 basedir=$(cd "$(dirname "$0")" && pwd -P)
 
+fail() {
+    local expected="$1"; shift
+    local actual="$1"; shift
+    cat <<___
+FAILURE:
+Expected: $expected
+  Actual: $actual
+ Message: $*
+___
+    exit 1
+}
+
 cd "$basedir"
 [[ $1 = -C ]] && { shift; rm -rf .build; }
 . ./activate
+
+FLASK_APP=server/app.py flask run & flaskpid=$!
+trap "kill $flaskpid" 0
+sleep 1
+
+expected='Hello, World!'
+actual=$(curl -s http://127.0.0.1:5000/)
+[[ $expected = $actual ]] || fail "$expected" "$actual" "Request of /"
