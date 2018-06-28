@@ -23,6 +23,7 @@ FLASK_APP=server/app.py flask run & flaskpid=$!
 trap "kill $flaskpid" 0
 sleep 1
 
-expected='Hello, World!'
-actual=$(curl -s http://127.0.0.1:5000/)
-[[ $expected = $actual ]] || fail "$expected" "$actual" "Request of /"
+expected='<p> Hello Bingo !</p>'
+actual=$(curl -s http://127.0.0.1:5000/hello/Bingo)
+[[ $actual =~ $expected ]] || fail \
+    "$expected in" "$actual" "Request of /hello/Bingo"
