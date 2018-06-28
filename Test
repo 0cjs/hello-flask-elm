@@ -18,20 +18,18 @@ ___
 cd "$basedir"
 [[ $1 = -C ]] && { shift; git clean -fdX; }
 
-############################################################
-# Python and NPM package install
-
+echo '===== Python build'
 . ./activate -q
-npm install --silent
 
-############################################################
-# Functional (smoke) test of Flask server
-
+echo '===== Flask static rendering test'
 FLASK_ENV=development FLASK_APP=server/app.py flask run & flaskpid=$!
 trap "kill $flaskpid" 0
 sleep 1
-
 expected='<p> Hello Bingo !</p>'
 actual=$(curl -s http://127.0.0.1:5000/hello/Bingo)
 [[ $actual =~ $expected ]] || fail \
     "$expected in" "$actual" "Request of /hello/Bingo"
+
+echo '===== npm/Elm build'
+[[ -d node_modules ]] || npm install --silent
+npx webpack
