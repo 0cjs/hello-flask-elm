@@ -8,7 +8,7 @@ module.exports = {
   },
 
   output: {
-    path: path.resolve(__dirname + 'server/static/dist'),
+    path: path.resolve(__dirname + '/server/static/dist/js'),
     filename: '[name].js',
   },
 
@@ -24,9 +24,5 @@ module.exports = {
     noParse: /\.elm$/,
   },
 
-  devServer: {
-    inline: true,
-    stats: { colors: true },
-  },
-
+  mode: 'production',
 };
