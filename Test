@@ -18,6 +18,9 @@ ___
 cd "$basedir"
 [[ $1 = -C ]] && { shift; git clean -fdX; }
 
+#   XXX Should figure out how to fix the security problems this shows.
+npm audit
+
 echo '===== Python build'
 . ./activate -q
 
